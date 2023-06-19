@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Timers;
 
 namespace Full_GRASP_And_SOLID
 {
@@ -15,6 +16,8 @@ namespace Full_GRASP_And_SOLID
         private IList<BaseStep> steps = new List<BaseStep>();
 
         public Product FinalProduct { get; set; }
+
+        public bool Cooked {get; set;} = false;
 
         // Agregado por Creator
         public void AddStep(Product input, double quantity, Equipment equipment, int time)
@@ -62,5 +65,22 @@ namespace Full_GRASP_And_SOLID
 
             return result;
         }
+
+        public int GetCookTime()
+        {
+            int totalTime = 0;
+            foreach (BaseStep step in this.steps)
+            {
+                totalTime += step.Time;
+            }
+            return totalTime;
+        }
+
+        public void Cook()
+        {
+            CountdownTimer countdownTimer = new CountdownTimer();
+            countdownTimer.Register(this.GetCookTime(), new Client(this));
+        }
+        
     }
 }
